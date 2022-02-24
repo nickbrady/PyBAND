@@ -1,11 +1,11 @@
 import numpy as np
 np.set_printoptions(precision=3)
-# import numba as nb
+import numba as nb
 import time
 import matplotlib.pyplot as plt
 
 # In[1]:
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def alpha_beta(delX):
     alpha = delX[:NJ-1]/(delX[:NJ-1] + delX[1:])
     beta  = 2.0/(delX[:NJ-1] + delX[1:])
@@ -22,7 +22,7 @@ def alpha_beta(delX):
 
 
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def auto_fill(conc, beta, delV, delT):
     '''
         Input: concentration
@@ -98,7 +98,7 @@ def auto_fill(conc, beta, delV, delT):
 
 
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def ABDGXY(alphaW, alphaE, betaW, betaE, rj, fE, fW, dE, dW, smG):
 
     A = (1.0 - alphaW)*fW - betaW*dW
@@ -111,7 +111,7 @@ def ABDGXY(alphaW, alphaE, betaW, betaE, rj, fE, fW, dE, dW, smG):
     return A, B, D, G, X, Y
 
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def MATINV(A):
     '''
     A = [B | D]
@@ -191,7 +191,7 @@ def MATINV(A):
 
 
 
-# #@nb.jit(nopython=True)
+# @nb.jit(nopython=True)
 def BAND_0(B, D, G, X):
     '''
         solves the BAND at j = 0
@@ -209,7 +209,7 @@ def BAND_0(B, D, G, X):
 
     return E, xi, x
 
-# #@nb.jit(nopython=True)
+# @nb.jit(nopython=True)
 def BAND_J(A, B, D, G, E_jm1, xi_jm1):
     '''
         solves the BAND at j
@@ -281,7 +281,7 @@ def BAND(A, B, D, G, X, Y):
 
 
 # ************************************************************************************************************
-# #@nb.jit(nopython=True)
+# @nb.jit(nopython=True)
 def BAND_0_NEWMAN(B, D, G, X):
     '''
         solves the BAND at j = 0
@@ -301,7 +301,7 @@ def BAND_0_NEWMAN(B, D, G, X):
 
     return E, xi, x
 
-# #@nb.jit(nopython=True)
+# @nb.jit(nopython=True)
 def BAND_J_NEWMAN(B, D, G):
     '''
         solves the BAND at j
@@ -320,7 +320,7 @@ def BAND_J_NEWMAN(B, D, G):
     return E, xi
 
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def BAND_NEWMAN(A, B, D, G, X, Y):
     '''
         Outputs the arrays 𝐄, 𝛏, and 𝐱
@@ -397,7 +397,7 @@ def BAND_NEWMAN(A, B, D, G, X, Y):
     return E, xi, x
 
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def calc_delC(NJ, E, xi, x):
     '''
         Calculates Δc from 𝐄, 𝛏, and 𝐱
@@ -411,7 +411,7 @@ def calc_delC(NJ, E, xi, x):
 
     return delC
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def unsteady(initial_conditions, number_time_steps, auto_fill, ABDGXY, BAND_NEWMAN, calc_delC):
     c_prev = initial_conditions
     yield c_prev
@@ -430,7 +430,7 @@ def unsteady(initial_conditions, number_time_steps, auto_fill, ABDGXY, BAND_NEWM
         yield c_prev
 
 
-#@nb.jit(nopython=True)
+@nb.jit(nopython=True)
 def steady_state(initial_guess, max_iterations, tolerance, auto_fill, ABDGXY, BAND_NEWMAN, calc_delC):
     c_prev = initial_guess
     it = 0
@@ -528,3 +528,6 @@ plt.plot(x_mesh, C[-1, 2,:], ':', color = c)
 plt.plot(x_mesh, C_SS[0,:], '-', color = 'k', zorder=-10, linewidth=2)
 plt.plot(x_mesh, C_SS[1,:], '--', color = 'k', zorder=-10, linewidth=2)
 plt.plot(x_mesh, C_SS[2,:], ':', color = 'k', zorder=-10, linewidth=2)
+
+
+# In[5]:
